@@ -23,6 +23,7 @@ func main() {
 
 	// handle static folder
 	http.Handle("/statics/", http.StripPrefix("/statics/", http.FileServer(http.Dir("statics"))))
+	http.Handle("/statics/pokedex", http.StripPrefix("/statics/pokedex/", http.FileServer(http.Dir("statics/pokedex"))))
 
 	// set validator
 	govalidator.SetFieldsRequiredByDefault(true)

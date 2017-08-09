@@ -1,0 +1,50 @@
+{{define "register"}}
+{{template "header" .}}
+{{template "navbar" .}}
+
+<div class="container">
+    <h1 class="text-center">
+        Welcome to Register Page!
+    </h1>
+    <p class="text-center">Already had account? Login <a href="/login">here</a></p>
+
+    <div class="col-md-6 col-md-offset-3">
+        <form class="form-border" method="post" action="/register">
+            <div class="form-group">
+                <label for="fullname">Full Name</label>
+                {{with .Errors.fullname}}
+                <span class="label label-danger"> *{{.}}</span>
+                {{end}}
+                <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Input Full Name">
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                {{with .Errors.username}}
+                <span class="label label-danger"> *{{.}}</span>
+                {{end}}
+                <input type="text" class="form-control" id="username" name="username" placeholder="Input Username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                {{with .Errors.password}}
+                <span class="label label-danger"> *{{.}}</span>
+                {{end}}
+                <input type="password" class="form-control" id="password" name="password" placeholder="Input Password">
+            </div>
+            <div class="form-group">
+                <label for="cpassword">Confirm Password</label>
+                {{with .Errors.cpassword}}
+                <span class="label label-danger"> *{{.}}</span>
+                {{end}}
+                <input type="password" class="form-control" id="cpassword" name="cpassword" placeholder="Input Confirm Password">
+            </div>
+            <div class="text-right">
+                <button type="submit" class="btn btn-info">REGISTER</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{{template "footer" .}}
+{{end}}

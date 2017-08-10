@@ -57,10 +57,18 @@ func Pokedex_create(w http.ResponseWriter, r *http.Request) {
 		helpers.Render(w, "pokedex_create", nil)
 
 	case "POST":
+		r.ParseMultipartForm(32 << 20)
+		file, handler, err := r.FormFile("pimages")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		defer file.Close()
+
 		p := &models.Pokedex{
 			Uuid: models.Uuid(),
 			Name: r.FormValue("pname"),
-			Images : "hello", //images(w, r, "pimages")
+			Images : handler.Filename,
 			Elements: r.FormValue("elements"),
 		}
 		result, err := govalidator.ValidateStruct(p)
@@ -76,6 +84,15 @@ func Pokedex_create(w http.ResponseWriter, r *http.Request) {
 		// ready to insert
 		if result {
 			// insert to folder
+			f, err := os.OpenFile("./statics/pokedex/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+			defer f.Close()
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			defer f.Close()
+			io.Copy(f, file)
+
 			models.InsertPokedex(p)
 			http.Redirect(w, r, "/pokedex", 302)
 			return

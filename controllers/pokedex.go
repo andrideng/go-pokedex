@@ -60,7 +60,7 @@ func Pokedex_create(w http.ResponseWriter, r *http.Request) {
 		p := &models.Pokedex{
 			Uuid: models.Uuid(),
 			Name: r.FormValue("pname"),
-			Images : images(w, r, "pimages"),
+			Images : "hello", //images(w, r, "pimages")
 			Elements: r.FormValue("elements"),
 		}
 		result, err := govalidator.ValidateStruct(p)

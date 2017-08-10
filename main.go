@@ -19,7 +19,7 @@ func mainPage(w http.ResponseWriter, r *http.Request) {
 func main() {
 	// set env variable
 	os.Setenv("port", ":8000")
-	os.Setenv("dbname", "cache/pokedex_db.sqlite3")
+	os.Setenv("dbname", "cache/pokedex_db.v1.sqlite3")
 
 	// handle static folder
 	http.Handle("/statics/", http.StripPrefix("/statics/", http.FileServer(http.Dir("statics"))))

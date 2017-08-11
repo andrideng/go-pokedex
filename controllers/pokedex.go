@@ -13,7 +13,16 @@ import (
 
 func Pokedex(w http.ResponseWriter, r *http.Request) {
 	p := models.GetPokedex()
-	helpers.Render(w, "pokedex", p)
+
+	uuid := helpers.GetUuid(r)
+	u := models.GetUserFromUuid(uuid)
+
+	m := map[string]interface{}{
+		"Pokedex": p,
+		"User":   u,
+	}
+
+	helpers.Render(w, "pokedex", m)
 }
 
 
@@ -23,15 +32,26 @@ func Pokedex_create(w http.ResponseWriter, r *http.Request) {
 		p := &models.Pokedex{}
 		p.Errors = make(map[string]string)
 		p.Errors["pname"] = helpers.GetMsg(w, r, "pname")
+		p.Errors["pimages"] = helpers.GetMsg(w, r, "pimages")
 		p.Errors["elements"] = helpers.GetMsg(w, r, "elements")
 
-		helpers.Render(w, "pokedex_create", nil)
+		uuid := helpers.GetUuid(r)
+		us := models.GetUserFromUuid(uuid)
+
+		m := map[string]interface{}{
+			"User": us,
+			"Info": p,
+		}
+
+		helpers.Render(w, "pokedex_create", m)
 
 	case "POST":
 		r.ParseMultipartForm(32 << 20)
 		file, handler, err := r.FormFile("pimages")
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			//http.Error(w, err.Error(), http.StatusInternalServerError)
+			helpers.SetMsg(w, "pimages", "please enter pokemon images!")
+			http.Redirect(w, r, "/pokedex/create", 302)
 			return
 		}
 		defer file.Close()
@@ -73,8 +93,38 @@ func Pokedex_create(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func Pokedex_del(w http.ResponseWriter, r *http.Request) {
-	uuid := strings.TrimPrefix(r.URL.Path, "/pokedex/delete")
-	println(uuid)
+func Pokedex_destroy(w http.ResponseWriter, r *http.Request) {
+	uuid := r.URL.Path[len("/pokedex/delete/"):]
+	models.DeletePokedex(uuid)
+	http.Redirect(w, r, "/pokedex", 302)
+}
+
+func Pokedex_edit(w http.ResponseWriter, r *http.Request) {
+	uuid := r.URL.Path[len("/pokedex/edit/"):]
+
+	switch r.Method {
+	case "GET":
+		p := models.GetOnePokedex(uuid)
+		uuid := helpers.GetUuid(r)
+		us := models.GetUserFromUuid(uuid)
+
+		m := map[string]interface{}{
+			"User": us,
+			"Info": p,
+		}
+
+		helpers.Render(w, "pokedex_edit", m)
+
+	case "POST":
+		p := &models.Pokedex{
+			Uuid: uuid,
+			Name: r.FormValue("pname"),
+			Elements: r.FormValue("elements"),
+		}
+		models.UpdatePokedex(p)
+		http.Redirect(w, r, "/pokedex", 302)
+		return
+	}
+
 }
 

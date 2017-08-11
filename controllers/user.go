@@ -18,7 +18,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		u.Errors["password"] = helpers.GetMsg(w, r, "password")
 		u.Errors["message"] = helpers.GetMsg(w, r, "message")
 
-		helpers.Render(w, "login", u)
+		uuid := helpers.GetUuid(r)
+		us := models.GetUserFromUuid(uuid)
+
+		m := map[string]interface{}{
+			"User":   us,
+			"Info": u,
+		}
+
+		helpers.Render(w, "login", m)
 
 	case "POST":
 		username := r.FormValue("username")
@@ -59,7 +67,15 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		u.Errors["password"] = helpers.GetMsg(w, r, "password")
 		u.Errors["cpassword"] = helpers.GetMsg(w, r, "cpassword")
 
-		helpers.Render(w, "register", u)
+		uuid := helpers.GetUuid(r)
+		us := models.GetUserFromUuid(uuid)
+
+		m := map[string]interface{}{
+			"User": us,
+			"Info": u,
+		}
+
+		helpers.Render(w, "register", m)
 
 	case "POST":
 		if n := models.CheckUser(r.FormValue("username")); n == true && r.FormValue("username") != "" {

@@ -47,19 +47,39 @@ func GetPokedex() *PokedexList{
 	return &list
 }
 
-func UpdatePokedex(p *Pokedex) (error, bool) {
+func GetOnePokedex(uuid string) *Pokedex{
 	var db, _ = sql.Open("sqlite3", os.Getenv("dbname"))
 	defer db.Close()
-	_, err := db.Query("update pokedex set name='"+p.Name+"', images='"+p.Images+"', elements='"+p.Elements+"' where uuid='"+p.Uuid+"'")
-	return err, true
+	q, err := db.Query("select name, images, elements from pokedex where uuid = '"+uuid+"'")
+	if err != nil {
+		return &Pokedex{}
+	}
+	var name, images, elements string
+	if q.Next() {
+		q.Scan(&name, &images, &elements)
+	}
+	return &Pokedex{Uuid: uuid, Name: name, Images: images, Elements: elements}
 }
 
-func DeletePokedex(uuid string) bool{
+func UpdatePokedex(p *Pokedex) (error) {
 	var db, _ = sql.Open("sqlite3", os.Getenv("dbname"))
 	defer db.Close()
-	_, err := db.Query("delete from pokedex where uuid = '"+uuid+"'")
-	if err != nil {
-		return false
-	}
-	return true
+	tx, _ := db.Begin()
+	stmt, _ := tx.Prepare("update pokedex set name = ?, elements = ? where uuid = ?")
+	_, err := stmt.Exec(p.Name, p.Elements, p.Uuid)
+
+	tx.Commit()
+	//res.RowsAffected()
+	return err
+}
+
+func DeletePokedex(uuid string) error{
+	var db, _ = sql.Open("sqlite3", os.Getenv("dbname"))
+	defer db.Close()
+	tx, _ := db.Begin()
+	stmt, _ := tx.Prepare("delete from pokedex where uuid = ?")
+	_, err := stmt.Exec(uuid)
+
+	tx.Commit()
+	return err
 }

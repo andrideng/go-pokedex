@@ -8,7 +8,7 @@
     <h5 class="text-center">Add More? Click <a href="/pokedex/create">here</a></h5>
 
     <div class="col-md-12">
-        {{range .}}
+        {{range .Pokedex}}
         <div class="col-md-4 text-center">
             <div class="panel panel-info">
                 <div class="panel-heading">
@@ -19,9 +19,11 @@
                 </div>
                 <div class="panel-footer">
                     {{.Elements}}
+                    {{if eq .User.Username ""}}
                     <hr style="border: 1px dashed">
-                    <a href="" class="btn btn-warning text-uppercase"><i class="fa fa-edit"></i> edit</a>
+                    <a href="/pokedex/edit/{{.Uuid}}" class="btn btn-warning text-uppercase"><i class="fa fa-edit"></i> edit</a>
                     <a href="/pokedex/delete/{{.Uuid}}" onclick="if(!confirm('Sure to delete?')) return false" class="btn btn-danger text-uppercase"><i class="fa fa-trash"></i> delete</a>
+                    {{end}}
                 </div>
             </div>
         </div>

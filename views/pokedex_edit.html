@@ -1,0 +1,35 @@
+{{define "pokedex_edit"}}
+{{template "header" .}}
+{{template "navbar" .}}
+
+<div class="container">
+    <h1 class="text-center">
+        Welcome to Edit Pokedex Page!
+    </h1>
+    <p class="text-center"><a href="/pokedex">Go Back?</a></p>
+
+    <div class="col-md-6 col-md-offset-3">
+        <form class="form-border" method="post" action="/pokedex/edit/{{.Info.Uuid}}" enctype="multipart/form-data">
+            <div class="form-group text-center">
+                <label for="pname">Current Pokemon Image</label><br>
+                <img src="/statics/pokedex/{{.Info.Images}}" alt="">
+            </div>
+            <div class="form-group">
+                <label for="pname">Pokemon Name</label>
+                <input type="text" class="form-control" id="pname" name="pname" value="{{.Info.Name}}" placeholder="Example: Charmander">
+            </div>
+            <div class="form-group">
+                <label for="elements">Pokemon Elements</label>
+                <input type="text" class="form-control" id="elements" value="{{.Info.Elements}}" name="elements" placeholder="Example: Grass, Fire">
+            </div>
+
+            <div class="text-right">
+                <button type="submit" class="btn btn-info">EDIT</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{{template "footer" .}}
+{{end}}

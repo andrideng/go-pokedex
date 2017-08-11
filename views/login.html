@@ -9,7 +9,7 @@
     <p class="text-center">Want to create account? Register <a href="/register">here</a></p>
 
     <div class="col-md-6 col-md-offset-3">
-        {{with .Errors.message}}
+        {{with .Info.Errors.message}}
         <div class="alert alert-danger">
             {{.}}
         </div>
@@ -18,14 +18,14 @@
         <form class="form-border" method="post" action="/login">
             <div class="form-group">
                 <label for="username">Username</label>
-                {{with .Errors.username}}
+                {{with .Info.Errors.username}}
                 <span class="label label-danger"> *{{.}}</span>
                 {{end}}
                 <input type="text" class="form-control" id="username" name="username" placeholder="Input Username">
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                {{with .Errors.password}}
+                {{with .Info.Errors.password}}
                 <span class="label label-danger"> *{{.}}</span>
                 {{end}}
                 <input type="password" class="form-control" id="password" name="password" placeholder="Input Password">

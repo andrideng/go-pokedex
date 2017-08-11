@@ -13,15 +13,19 @@ import (
 func mainPage(w http.ResponseWriter, r *http.Request) {
 	uuid := helpers.GetUuid(r)
 	u := models.GetUserFromUuid(uuid)
-	helpers.Render(w, "main", u)
-}
 
+	m := map[string]interface{}{
+		"User":   u,
+	}
+
+	helpers.Render(w, "main", m)
+}
 
 
 func main() {
 	// set env variable
 	os.Setenv("port", ":8000")
-	os.Setenv("dbname", "cache/pokedex_db.v1.sqlite3")
+	os.Setenv("dbname", "cache/pokedex_db.sqlite3")
 
 	// handle static folder
 	http.Handle("/statics/", http.StripPrefix("/statics/", http.FileServer(http.Dir("statics"))))
@@ -32,12 +36,17 @@ func main() {
 
 	// routes
 	http.HandleFunc("/", mainPage)
-	http.HandleFunc("/login", controllers.Login)
-	http.HandleFunc("/logout", controllers.Logout)
-	http.HandleFunc("/register", controllers.Register)
+
+		// auth routes
+	http.HandleFunc("/login", helpers.BeforeLogin(controllers.Login))
+	http.HandleFunc("/register", helpers.BeforeLogin(controllers.Register))
+	http.HandleFunc("/logout",  helpers.AfterLogin(controllers.Logout))
+
+		// pokedex routes
 	http.HandleFunc("/pokedex", controllers.Pokedex)
-	http.HandleFunc("/pokedex/create", controllers.Pokedex_create)
-	http.HandleFunc("/pokedex/delete", controllers.Pokedex_del)
+	http.HandleFunc("/pokedex/create", helpers.AfterLogin(controllers.Pokedex_create))
+	http.HandleFunc("/pokedex/delete/", helpers.AfterLogin(controllers.Pokedex_destroy))
+	http.HandleFunc("/pokedex/edit/", helpers.AfterLogin(controllers.Pokedex_edit))
 
 	// listen and serve
 	logs.Logger.Info("start serve at:%v", os.Getenv("port"))

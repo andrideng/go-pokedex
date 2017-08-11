@@ -12,10 +12,10 @@ import (
 
 func mainPage(w http.ResponseWriter, r *http.Request) {
 	uuid := helpers.GetUuid(r)
-	u := models.GetUserFromUuid(uuid)
+	us := models.GetUserFromUuid(uuid)
 
 	m := map[string]interface{}{
-		"User":   u,
+		"User":   us,
 	}
 
 	helpers.Render(w, "main", m)
@@ -38,15 +38,15 @@ func main() {
 	http.HandleFunc("/", mainPage)
 
 		// auth routes
-	http.HandleFunc("/login", helpers.BeforeLogin(controllers.Login))
-	http.HandleFunc("/register", helpers.BeforeLogin(controllers.Register))
-	http.HandleFunc("/logout",  helpers.AfterLogin(controllers.Logout))
+	http.HandleFunc("/login", (controllers.Login))
+	http.HandleFunc("/register", (controllers.Register))
+	http.HandleFunc("/logout",  (controllers.Logout))
 
 		// pokedex routes
 	http.HandleFunc("/pokedex", controllers.Pokedex)
-	http.HandleFunc("/pokedex/create", helpers.AfterLogin(controllers.Pokedex_create))
-	http.HandleFunc("/pokedex/delete/", helpers.AfterLogin(controllers.Pokedex_destroy))
-	http.HandleFunc("/pokedex/edit/", helpers.AfterLogin(controllers.Pokedex_edit))
+	http.HandleFunc("/pokedex/create", (controllers.Pokedex_create))
+	http.HandleFunc("/pokedex/delete/", (controllers.Pokedex_destroy))
+	http.HandleFunc("/pokedex/edit/", (controllers.Pokedex_edit))
 
 	// listen and serve
 	logs.Logger.Info("start serve at:%v", os.Getenv("port"))

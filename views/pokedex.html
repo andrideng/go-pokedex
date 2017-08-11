@@ -19,11 +19,9 @@
                 </div>
                 <div class="panel-footer">
                     {{.Elements}}
-                    {{if eq .User.Username ""}}
                     <hr style="border: 1px dashed">
                     <a href="/pokedex/edit/{{.Uuid}}" class="btn btn-warning text-uppercase"><i class="fa fa-edit"></i> edit</a>
                     <a href="/pokedex/delete/{{.Uuid}}" onclick="if(!confirm('Sure to delete?')) return false" class="btn btn-danger text-uppercase"><i class="fa fa-trash"></i> delete</a>
-                    {{end}}
                 </div>
             </div>
         </div>

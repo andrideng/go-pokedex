@@ -95,6 +95,7 @@ func Pokedex_create(w http.ResponseWriter, r *http.Request) {
 
 func Pokedex_destroy(w http.ResponseWriter, r *http.Request) {
 	uuid := r.URL.Path[len("/pokedex/delete/"):]
+	
 	models.DeletePokedex(uuid)
 	http.Redirect(w, r, "/pokedex", 302)
 }

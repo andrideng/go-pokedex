@@ -50,6 +50,7 @@ func main() {
 
 	// listen and serve
 	logs.Logger.Info("start serve at:%v", os.Getenv("port"))
+	println("Server Start in port "+ os.Getenv("port"))
 	err := http.ListenAndServe(os.Getenv("port"), nil)
 	logs.Logger.Critical("server err: %v", err)
 }

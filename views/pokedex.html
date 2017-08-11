@@ -5,8 +5,9 @@
 <div class="container">
     <h1 class="text-center">Welcome to Pokedex Page!</h1>
     <h4 class="text-center">Here we list all pokemon!</h4>
+    {{if ne .User.Username ""}}
     <h5 class="text-center">Add More? Click <a href="/pokedex/create">here</a></h5>
-
+    {{end}}
     <div class="col-md-12">
         {{range .Pokedex}}
         <div class="col-md-4 text-center">
@@ -18,9 +19,9 @@
                     <img src="/statics/pokedex/{{.Images}}" alt="">
                 </div>
                 <div class="panel-footer">
-                    {{.Elements}}
+                    <span class="label label-default">{{.Elements}}</span>
                     <hr style="border: 1px dashed">
-                    <a href="/pokedex/edit/{{.Uuid}}" class="btn btn-warning text-uppercase"><i class="fa fa-edit"></i> edit</a>
+                    <!-- <a href="/pokedex/edit/{{.Uuid}}" class="btn btn-warning text-uppercase"><i class="fa fa-edit"></i> edit</a> -->
                     <a href="/pokedex/delete/{{.Uuid}}" onclick="if(!confirm('Sure to delete?')) return false" class="btn btn-danger text-uppercase"><i class="fa fa-trash"></i> delete</a>
                 </div>
             </div>

@@ -2,7 +2,7 @@
 	"ImportPath": "go_pokedex",
 	"GoVersion": "go1.8.3",
 	"Packages": [
-		"./.."
+		"../"
 	],
 	"Deps": []
 }

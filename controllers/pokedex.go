@@ -10,41 +10,12 @@ import (
 	"io"
 )
 
-func images(w http.ResponseWriter, r *http.Request, name string) string {
-	var filename string
-	err := r.ParseMultipartForm(100000)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return ""
-	}
-	m := r.MultipartForm
-	files := m.File[name]
-	for i := range files {
-		file, err := files[i].Open()
-		defer file.Close()
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return ""
-		}
-		f, err := os.Create("./statics/pokedex/"+files[i].Filename)
-		defer f.Close()
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return ""
-		}
-		if _, err := io.Copy(f, file); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return ""
-		}
-		filename = files[i].Filename
-	}
-
-	return filename
-}
 
 func Pokedex(w http.ResponseWriter, r *http.Request) {
-	helpers.Render(w, "pokedex", nil)
+	p := models.GetPokedex()
+	helpers.Render(w, "pokedex", p)
 }
+
 
 func Pokedex_create(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
@@ -100,5 +71,10 @@ func Pokedex_create(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/pokedex/create", 302)
 	}
 
+}
+
+func Pokedex_del(w http.ResponseWriter, r *http.Request) {
+	uuid := strings.TrimPrefix(r.URL.Path, "/pokedex/delete")
+	println(uuid)
 }
 

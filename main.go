@@ -6,6 +6,7 @@ import (
 	"./helpers"
 	"./models"
 	"./controllers"
+	"./logs"
 	"github.com/asaskevich/govalidator"
 )
 
@@ -14,6 +15,7 @@ func mainPage(w http.ResponseWriter, r *http.Request) {
 	u := models.GetUserFromUuid(uuid)
 	helpers.Render(w, "main", u)
 }
+
 
 
 func main() {
@@ -35,7 +37,10 @@ func main() {
 	http.HandleFunc("/register", controllers.Register)
 	http.HandleFunc("/pokedex", controllers.Pokedex)
 	http.HandleFunc("/pokedex/create", controllers.Pokedex_create)
+	http.HandleFunc("/pokedex/delete", controllers.Pokedex_del)
 
 	// listen and serve
-	http.ListenAndServe(os.Getenv("port"), nil)
+	logs.Logger.Info("start serve at:%v", os.Getenv("port"))
+	err := http.ListenAndServe(os.Getenv("port"), nil)
+	logs.Logger.Critical("server err: %v", err)
 }

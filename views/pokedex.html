@@ -8,25 +8,24 @@
     <h5 class="text-center">Add More? Click <a href="/pokedex/create">here</a></h5>
 
     <div class="col-md-12">
-
+        {{range .}}
         <div class="col-md-4 text-center">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h3 class="panel-title">[Pokemon Name]</h3>
+                    <h3 class="panel-title">{{.Name}}</h3>
                 </div>
                 <div class="panel-body">
-                    <img src="http://assets.pokemon.com/assets/cms2/img/pokedex/detail/004.png" alt="">
+                    <img src="/statics/pokedex/{{.Images}}" alt="">
                 </div>
                 <div class="panel-footer">
-                    [Elements]
+                    {{.Elements}}
                     <hr style="border: 1px dashed">
                     <a href="" class="btn btn-warning text-uppercase"><i class="fa fa-edit"></i> edit</a>
-                    <a href="" class="btn btn-danger text-uppercase"><i class="fa fa-trash"></i> delete</a>
+                    <a href="/pokedex/delete/{{.Uuid}}" onclick="if(!confirm('Sure to delete?')) return false" class="btn btn-danger text-uppercase"><i class="fa fa-trash"></i> delete</a>
                 </div>
             </div>
         </div>
-
-
+        {{end}}
 
     </div>
 </div>
